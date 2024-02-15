@@ -1,0 +1,6 @@
+html
+  body(style='display: flex; flex-direction: column; align-items: center;')
+    h1(style='margin-top: 30px; color: #4287f5;')=title
+    ul(style='font-size: 26px;')
+      each todo in todos
+        li=todo.title
