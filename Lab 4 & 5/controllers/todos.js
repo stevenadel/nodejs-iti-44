@@ -19,10 +19,11 @@ const editTodo = async (todo, id, userId) => {
 };
 
 const deleteTodo = async (id) => {
-  await UsersModel.deleteOne({ _id: id })
+  const deleted = await TodosModel.deleteOne({ _id: id })
     .catch((err) => {
       throw new WebError(err.message, 422);
     });
+  return deleted.deletedCount;
 };
 
 const getTodos = async (status, limit, skip) => {

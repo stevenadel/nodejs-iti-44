@@ -1,8 +1,10 @@
 const UsersModel = require('../models/users');
 const TodosModel = require('../models/todos');
 const WebError = require('../lib/web-error');
+const jwt = require("jsonwebtoken");
 
 const createUser = async (user) => {
+  user.username = user.username.trim();
   const newUser = await UsersModel.create(user)
     .catch((err) => {
       throw new WebError(err.message, 422);
@@ -10,20 +12,34 @@ const createUser = async (user) => {
   return newUser;
 };
 
-const login = async (user) => {
-  const { username, password } = user;
+const login = async (userInput) => {
+  const { username, password } = userInput;
+  await UsersModel.findOne({ username })
+  .catch((err) => {
+    throw new WebError(err.message, 422);
+  });
+
+  try {
+    await user.verifyPassword(password);
+  } catch(err) {
+    throw new WebError("Username or password is incorrect (unauthorized).", 401);
+  }
+  
+  const token = jwt.sign({ username, id: user._id }, "fghjfh", { expiresIn: "3d" });
+  return token;
 };
 
 const getUsers = async () => {
-  const users = await UsersModel.find().select({ username: 1 });
+  const users = await UsersModel.find().select({ firstName: 1, _id: 0 });
   return users;
 };
 
 const deleteUser = async (id) => {
-  await UsersModel.deleteOne({ _id: id })
+  const deleted = await UsersModel.deleteOne({ _id: id })
     .catch((err) => {
       throw new WebError(err.message, 422);
     });
+  return deleted.deletedCount;
 };
 
 const editUser = async (user, userId) => {

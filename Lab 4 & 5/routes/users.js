@@ -3,7 +3,7 @@ const { UsersController } = require('../controllers');
 const asyncWrapper = require('../lib/async-wrapper');
 
 router.post('/', async (req, res, next) => {
-  const [err, user] = await asyncWrapper(UsersController.createUser(req.body));
+  const [ err, user ] = await asyncWrapper(UsersController.createUser(req.body));
   if (!err) {
     return res.json(user);
   }
@@ -11,7 +11,7 @@ router.post('/', async (req, res, next) => {
 });
 
 router.post("/login", async (req, res, next) => {
-  const [err, token] = await asyncWrapper(UsersController.login(req.body));
+  const [ err, token ] = await asyncWrapper(UsersController.login(req.body));
   if (!err) {
     return res.json({ token: token });
   }
@@ -24,8 +24,8 @@ router.get('/', async (req, res) => {
 });
 
 router.delete("/:id", async (req, res, next) => {
-  const [ err ] = await asyncWrapper(UsersController.deleteUser(req.params.id));
-  if (!err) {
+  const [ err, deleted ] = await asyncWrapper(UsersController.deleteUser(req.params.id));
+  if (!err && deleted) {
     return res.json({ message: 'User deleted successfully' });
   }
   return next(err);

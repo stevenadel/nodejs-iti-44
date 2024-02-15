@@ -27,23 +27,16 @@ const usersSchema = new mongoose.Schema(
     },
     dob: {
       type: Date
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now
     }
   },
   {
+    timestamps: true,
     toJSON: {
       transform: (doc, ret) => {
         ret.password = undefined;
         return ret;
       },
-    },
+    }
   }
 );
 
@@ -57,5 +50,4 @@ usersSchema.methods.verifyPassword = async function verifyPassword(password) {
 };
 
 const UsersModel = mongoose.model('Users', usersSchema);
-
 module.exports = UsersModel;

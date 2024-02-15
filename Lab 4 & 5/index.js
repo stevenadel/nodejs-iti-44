@@ -4,8 +4,6 @@ const routes = require('./routes');
 
 const app = express();
 
-mongoose.connect('url');
-
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
@@ -15,6 +13,18 @@ app.use((err, req, res, next) => {
   res.status(err.status).json({ error: err.message });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+mongoose
+.connect("url")
+.then(res => {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+})
+.catch(err => {
+  console.log(err)
+})
+
+
+
+
+
